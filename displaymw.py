@@ -89,11 +89,9 @@ try:
         '781': 'wi-tornado.bmp'
     }
 
-    # Check for the weather status in the main dictionary
     if weather_status in weather_images:
         weather_image = Image.open(os.path.join(picdir, weather_images[weather_status]))
     else:
-        # Check for weather statuses starting with specific digits
         for key, image in primary_weather_images.items():
             if weather_status.startswith(key):
                 weather_image = Image.open(os.path.join(picdir, image))
@@ -150,7 +148,6 @@ try:
         (range(350, 361), 'N', 'wi-direction-up.bmp')
     ]
 
-    # Loop through the ranges to find the appropriate direction and image
     for direction_range, winddir, image_file in wind_directions:
         if wind_deg in direction_range:
             winddir_image = Image.open(os.path.join(picdir, image_file))
@@ -172,7 +169,7 @@ try:
         (range(47, 55), 'wi-wind-beaufort-9.bmp'),
         (range(55, 64), 'wi-wind-beaufort-10.bmp'),
         (range(64, 72), 'wi-wind-beaufort-11.bmp'),
-        (range(72, 1000), 'wi-wind-beaufort-12.bmp')  # Handle wind speeds 72 and above
+        (range(72, 1000), 'wi-wind-beaufort-12.bmp')
     ]
     for speed_range, image_file in beaufort_images:
         if wind_speed in speed_range:
@@ -188,7 +185,6 @@ try:
     torrent_state_starty = torrent_starty
     torrent_bar_startx = torrent_startx
     torrent_bar_starty = torrent_starty + 30
-
 
     def draw_torrent_info(torrent, index, tor_index_size, draw, font1, text_color, torrent_startx, torrent_starty, torrent_bar_startx, torrent_bar_starty, torrent_state_startx, torrent_state_starty):
         draw.text((torrent_startx, torrent_starty + (index * tor_index_size)), torrent.name[:28] + '...', font=font1, fill=text_color)
@@ -207,10 +203,7 @@ try:
         torrent_state = state_labels.get(torrent.state, '')
 
         if torrent_state:
-            draw.text(
-                (torrent_state_startx, torrent_state_starty + (index * tor_index_size)),
-                torrent_state, font=font1, fill=text_color, anchor='ra'
-            )
+            draw.text((torrent_state_startx, torrent_state_starty + (index * tor_index_size)), torrent_state, font=font1, fill=text_color, anchor='ra')
 
     for torrent in qbt_client.torrents_info(sort='state', reverse=False):
         draw_torrent_info(torrent, index, tor_index_size, draw, font1, text_color, torrent_startx, torrent_starty, torrent_bar_startx, torrent_bar_starty, torrent_state_startx, torrent_state_starty)
