@@ -188,7 +188,7 @@ try:
     torrent_bar_starty = torrent_starty + 30
 
     def draw_torrent_info(torrent, index, tor_index_size, draw, font1, text_color, torrent_startx, torrent_starty, torrent_bar_startx, torrent_bar_starty, torrent_state_startx, torrent_state_starty):
-        draw.text((torrent_startx, torrent_starty + (index * tor_index_size)), torrent.name[:28] + '...', font=font1, fill=text_color)
+        draw.text((torrent_startx, torrent_starty + (index * tor_index_size)), torrent.name[:25] + '...', font=font1, fill=text_color)
         progress_bar_width = 424 * torrent.progress
         draw.rectangle((torrent_bar_startx, (torrent_bar_starty + (index * tor_index_size)), torrent_bar_startx + progress_bar_width, (torrent_bar_starty + (index * tor_index_size)) + 10), outline=text_color, fill='#9099A2')
 
