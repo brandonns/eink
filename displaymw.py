@@ -188,10 +188,33 @@ try:
     torrent_bar_starty = torrent_starty + 30
 
     def draw_torrent_info(torrent, index, tor_index_size, draw, font1, text_color, torrent_startx, torrent_starty, torrent_bar_startx, torrent_bar_starty, torrent_state_startx, torrent_state_starty):
-        draw.text((torrent_startx, torrent_starty + (index * tor_index_size)), torrent.name[:25] + '...', font=font1, fill=text_color)
+        def format_seconds(seconds):
+            days, seconds = divmod(seconds, 86400)
+            hours, seconds = divmod(seconds, 3600)
+            minutes, seconds = divmod(seconds, 60)
+            time_parts = []
+            if days > 7:
+                return ">1Wk"
+            elif days == 0 and hours == 0 and minutes <= 15:
+                return "Finishing Download"
+            else:
+                if days != 0:
+                    time_parts.append(f"{days}D")
+                if hours > 0:
+                    time_parts.append(f"{hours}H")
+                if minutes > 0:
+                    time_parts.append(f"{minutes}M")
+                return " ".join(time_parts) if time_parts else 'Done'
+
+        torrent_dl = str(round((torrent.downloaded / (1024 ** 3)), 2))
+        torrent_ts = str(round((torrent.size / (1024 ** 3)), 2))
+        torrent_perc = str(round((torrent.downloaded / torrent.size * 100)))
+        torrent_eta = format_seconds(torrent.eta)
+        draw.text((torrent_startx, torrent_starty + (index * tor_index_size)), torrent.name.replace(".", " ")[:26] + '...', font=font1, fill=text_color)
         progress_bar_width = 424 * torrent.progress
         draw.rectangle((torrent_bar_startx, (torrent_bar_starty + (index * tor_index_size)), torrent_bar_startx + progress_bar_width, (torrent_bar_starty + (index * tor_index_size)) + 10), outline=text_color, fill='#9099A2')
-
+        draw.text( (torrent_startx, (torrent_starty + (index * tor_index_size)) + 40) , torrent_dl + 'GB/' + torrent_ts + 'GB   ' + torrent_perc + '%', font=font3, fill=text_color )
+        draw.text( (800, (torrent_starty + (index * tor_index_size)) + 40) , torrent_eta, font=font3, fill=text_color, anchor='ra' )
         state_labels = {
             'error': 'ERR', 'missingFiles': 'ERR', 'unknown': 'ERR',
             'downloading': 'DNL', 'forcedDL': 'DNL',
